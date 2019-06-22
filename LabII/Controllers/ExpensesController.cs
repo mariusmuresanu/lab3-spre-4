@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using LabII.Models;
 using LabII.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -107,6 +108,7 @@ namespace LabII.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         // POST: api/Expenses
+        [Authorize]
         [HttpPost]
         public void Post([FromBody] Expense expense)
         {
