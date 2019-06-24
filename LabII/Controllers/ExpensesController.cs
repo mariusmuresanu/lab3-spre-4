@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using LabII.DTOs;
 using LabII.Models;
 using LabII.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -54,7 +55,7 @@ namespace LabII.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         // GET: api/Expenses
         [HttpGet]
-        public IEnumerable<Expense> Get([FromQuery]DateTime? from, [FromQuery]DateTime? to, [FromQuery]Models.Type? type)
+        public IEnumerable<ExpenseGetModel> Get([FromQuery]DateTime? from, [FromQuery]DateTime? to, [FromQuery]Models.Type? type)
         {
             return expenseService.GetAll(from, to, type);
         }
@@ -110,7 +111,7 @@ namespace LabII.Controllers
         // POST: api/Expenses
         [Authorize]
         [HttpPost]
-        public void Post([FromBody] Expense expense)
+        public void Post([FromBody] ExpennsePostModel expense)
         {
             expenseService.Create(expense);
         }

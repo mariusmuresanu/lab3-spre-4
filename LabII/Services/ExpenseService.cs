@@ -1,4 +1,5 @@
-﻿using LabII.Models;
+﻿using LabII.DTOs;
+using LabII.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -10,11 +11,11 @@ namespace LabII.Services
     public interface IExpenseService
     {
 
-        IEnumerable<Expense> GetAll(DateTime? from=null, DateTime? to=null, Models.Type? type=null);
+        IEnumerable<ExpenseGetModel> GetAll(DateTime? from=null, DateTime? to=null, Models.Type? type=null);
 
         Expense GetById(int id);
 
-        Expense Create(Expense user);
+        Expense Create(ExpennsePostModel user);
 
         Expense Upsert(int id, Expense user);
 
@@ -32,11 +33,12 @@ namespace LabII.Services
         }
 
 
-        public Expense Create(Expense expense)
+        public Expense Create(ExpennsePostModel expense)
         {
-            context.Expenses.Add(expense);
+            Expense toAdd = ExpennsePostModel.ToExpense(expense);
+            context.Expenses.Add(toAdd);
             context.SaveChanges();
-            return expense;
+            return toAdd;
         }
 
         public Expense Delete(int id)
@@ -51,13 +53,15 @@ namespace LabII.Services
             return existing;
         }
        
-        public IEnumerable<Expense> GetAll(DateTime? from = null, DateTime? to = null, Models.Type? type = null)
+        public IEnumerable<ExpenseGetModel> GetAll(DateTime? from = null, DateTime? to = null, Models.Type? type = null)
         {
-            IQueryable<Expense> result = context.Expenses.Include(x => x.Comments);
+            IQueryable<Expense> result = context
+                .Expenses
+                .Include(x => x.Comments);
             if ((from == null && to == null) && type == null)
 
             {
-                return result;
+                return result.Select(e => ExpenseGetModel.FromExpense(e));
             }
             if (from != null)
             {
@@ -71,7 +75,8 @@ namespace LabII.Services
             {
                 result = result.Where(e => e.Type == type);
             }
-            return result;
+
+            return result.Select(e => ExpenseGetModel.FromExpense(e));
         }
 
         public Expense GetById(int id)
