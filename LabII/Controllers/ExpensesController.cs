@@ -23,26 +23,26 @@ namespace LabII.Controllers
         }
         ///<remarks>
         ///{
-            ///"id": 7,
-            ///"description": "Variable",
-            ///"type": 2,
-            ///"location": "Bistrita",
-            ///"date": "2019-05-09T17:17:17",
-            ///"currency": "EURO",
-            ///"sum": 777.55,
-            ///"comments": [
-            ///{
-            ///"id": 1,
-            ///"text": "What?! 777.55",
-            ///"important": true
-            ///},
-            ///{
-            ///"id": 2,
-            ///"text": "Nice sum!",
-            ///"important": false
-            ///}
-            ///]
-            ///}
+        ///"id": 7,
+        ///"description": "Variable",
+        ///"type": 2,
+        ///"location": "Bistrita",
+        ///"date": "2019-05-09T17:17:17",
+        ///"currency": "EURO",
+        ///"sum": 777.55,
+        ///"comments": [
+        ///{
+        ///"id": 1,
+        ///"text": "What?! 777.55",
+        ///"important": true
+        ///},
+        ///{
+        ///"id": 2,
+        ///"text": "Nice sum!",
+        ///"important": false
+        ///}
+        ///]
+        ///}
         /// </remarks>
         /// <summary>
         /// Get all the expenses
@@ -50,14 +50,16 @@ namespace LabII.Controllers
         /// <param name="from">Optional, filtered by minimum date</param>
         /// <param name="to">Optional, filtered by maximu date</param>
         /// <param name="type">Optional, filtered by type</param>
+        /// <param name="page"></param>
         /// <returns>A list of expenses</returns>
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         // GET: api/Expenses
         [HttpGet]
-        public IEnumerable<ExpenseGetModel> Get([FromQuery]DateTime? from, [FromQuery]DateTime? to, [FromQuery]Models.Type? type)
+        public PaginatedList<ExpenseGetModel> Get([FromQuery]DateTime? from, [FromQuery]DateTime? to, [FromQuery]Models.Type? type, [FromQuery]int page = 1)
         {
-            return expenseService.GetAll(from, to, type);
+            page = Math.Max(page, 1);
+            return expenseService.GetAll(page, from, to, type);
         }
 
         ///<remarks>
